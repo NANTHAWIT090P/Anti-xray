@@ -1,0 +1,23 @@
+name: Build AntiXray
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -o AntiXray-source.zip
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: AntiXray/pom.xml
+      - run: mvn --batch-mode clean package
+        working-directory: AntiXray
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AntiXray
+          path: AntiXray/target/AntiXray-1.0.0.jar
